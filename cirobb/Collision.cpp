@@ -258,6 +258,7 @@ void OBBToOBB(Manifold& m, Shape* b1, Shape* b2)
   }
   
   Vec2 ref[2], inc[2];
+  int refEdgeIdx, incEdgeIdx;
   
   int side = v1[axisIndex] < v2[axisIndex] ? 1 : -1;
   
@@ -269,7 +270,9 @@ void OBBToOBB(Manifold& m, Shape* b1, Shape* b2)
     if(side == -1) axisIndex += 2;
     ref[0] = vertsA[axisIndex];
     ref[1] = vertsA[(axisIndex + 1) % 4];
+    refEdgeIdx = axisIndex;
     axisIndex = FindIncidentEdgeIndex(normal * axes[2], normal * axes[3]);
+    incEdgeIdx = axisIndex;
     inc[0] = vertsB[axisIndex];
     inc[1] = vertsB[(axisIndex + 1) % 4];
     normal *= -1;
@@ -279,7 +282,9 @@ void OBBToOBB(Manifold& m, Shape* b1, Shape* b2)
     if(side == -1) axisIndex -= 2;
     ref[0] = vertsB[axisIndex];
     ref[1] = vertsB[(axisIndex + 1) % 4];
+    refEdgeIdx = axisIndex;
     axisIndex = FindIncidentEdgeIndex(normal.x, normal.y);
+    incEdgeIdx = axisIndex;
     inc[0] = vertsA[axisIndex];
     inc[1] = vertsA[(axisIndex + 1) % 4];
   }
@@ -299,6 +304,7 @@ void OBBToOBB(Manifold& m, Shape* b1, Shape* b2)
       Rot2.SetTranspose(clipPoint);
       m.contacts[numContacts].penetration = penetration;
       m.contacts[numContacts].position = b1->body->position + clipPoint + m.normal * penetration;
+      m.contacts[numContacts].id = FeatureID(refEdgeIdx, incEdgeIdx, i);
   	  
       // Post-Projection Position
       m.postPosition.oldPointA[numContacts] = b1->body->position + clipPoint - m.A->position;

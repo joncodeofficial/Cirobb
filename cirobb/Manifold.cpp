@@ -34,25 +34,22 @@ void Manifold::Update(Contact* newContacts, const int& numNewContacts)
 {
  
   Contact mergedContacts[2];
-  
+
   for (int i = 0; i < numNewContacts; i++)
   {
+    mergedContacts[i] = newContacts[i];
+    mergedContacts[i].warmPoint = mergedContacts[i].position;
+
     for(int j = 0; j < numContacts; j++)
     {
-      if((newContacts[i].position - contacts[j].position).SquareMagnitude() < K_TOLERANCE)
+      if(newContacts[i].id == contacts[j].id)
       {
-      	mergedContacts[i] = newContacts[i];
       	mergedContacts[i].Pn = contacts[j].Pn;
       	mergedContacts[i].Pt = contacts[j].Pt;
+      	mergedContacts[i].warmPoint = Vec2(FLT_MAX, 0.0f);
       	break;
       }
-      else
-      if(j + 1 == numContacts)
-      {
-      	mergedContacts[i] = newContacts[i];
-        mergedContacts[i].warmPoint = mergedContacts[i].position;
-      }
-    }			
+    }
   }
   numContacts = numNewContacts;
   
