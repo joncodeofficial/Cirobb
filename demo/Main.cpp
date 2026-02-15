@@ -432,7 +432,7 @@ int main(int args, char **argv)
     return -1;
   }
 
-  mainWindow = glfwCreateWindow(width, height, "Cirobb 1.1.10", NULL, NULL);
+  mainWindow = glfwCreateWindow(width, height, "Cirobb 1.1.12", NULL, NULL);
 
   if (mainWindow == NULL)
   {
