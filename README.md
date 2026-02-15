@@ -22,20 +22,20 @@ Additionally, it features a straightforward 2D Collision Detection system that e
 
 <table>
   <tr>
-    <td>✨ Direct Solver</td>
+    <td>⬜ Direct Solver</td>
     <td>Improve Velocity Solver convergence</td>
   </tr>
   <tr>
-    <td>🔗 Distance Constraint</td>
+    <td>⬜ Distance Constraint</td>
     <td>Optional feature for distance-based constraints</td>
   </tr>
   <tr>
-    <td>🔷 Convex Polygons</td>
+    <td>⬜ Convex Polygons</td>
     <td>Collision Detection against convex polygons</td>
   </tr>
   <tr>
-    <td>🔄 Contact Points</td>
-    <td>Change from Distance-Based to Feature-Based</td>
+    <td>✅ Contact Points</td>
+    <td><s>Change from Distance-Based to Feature-Based</s></td>
   </tr>
 </table>
 
