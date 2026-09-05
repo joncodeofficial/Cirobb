@@ -15,7 +15,7 @@ Additionally, it features a straightforward 2D Collision Detection system that e
 
 ## ⚡ Demos & Examples
 
-- [WebAssembly Demo (v1.1.8)](https://jonpena.github.io/Cirobb-wasm)
+- [WebAssembly Demo (v1.1.8)](https://joncodeofficial.github.io/Cirobb-wasm)
 - [YouTube Demo Video (v1.1.4)](https://youtu.be/j2p6qmOVA7M)
 
 ## 🔜 Future Features
