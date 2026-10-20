@@ -22,10 +22,6 @@ Additionally, it features a straightforward 2D Collision Detection system that e
 
 <table>
   <tr>
-    <td>⬜ Direct Solver</td>
-    <td>Improve Velocity Solver convergence</td>
-  </tr>
-  <tr>
     <td>⬜ Distance Constraint</td>
     <td>Optional feature for distance-based constraints</td>
   </tr>
