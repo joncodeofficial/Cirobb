@@ -2,9 +2,7 @@
 
 ## 🚀 Overview
 
-**Cirobb** is a **2D Rigid Body Physics Engine** inspired by **Box2D Lite** that was created with the purpose of helping people who are starting in this wonderful world of physics for Videogames. The Engine uses the Erin Catto's Contact Persistence Algorithm and it's implementation of the PGS (Projected Gauss Seidel) solver to solve the MLCP very well known as a SI (Sequential Impulse).
-
-Additionally, it features a straightforward 2D Collision Detection system that efficiently calculates Contact Points, Normal Direction, and Penetration depth. This project aims to provide a clear and detailed understanding of how physics engines work under the hood, making it an ideal learning resource for game developers.
+**Cirobb** is a small, readable 2D rigid body physics engine in C++, built around one state-of-the-art solver.
 
 > 💡 For more complex simulations with multiple constraints and shapes, we recommend using **Box2D**, which is considered the best open-source 2D physics engine available.
 
@@ -120,4 +118,4 @@ python3 -m http.server -d build-web/web
 
 ## 📝 Note
 
-Cirobb is designed as an educational introduction to 2D physics engines. It intentionally maintains simplicity to facilitate learning and understanding of fundamental concepts.
+Cirobb is my personal project to practice physics for video games.
