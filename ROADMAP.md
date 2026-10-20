@@ -2,7 +2,7 @@
 
 ## Vision
 
-Cirobb is my lab for studying the state of the art (SOTA) in rigid body solvers.
+Cirobb is my lab for studying the state of the art (SOTA) in rigid body simulation, built around one well-tuned solver.
 It is not a Box2D clone: I take ideas from several engines (Box2D v3, Jolt, PhysX, Rapier...),
 understand them in depth, measure them, and add my own variants.
 
