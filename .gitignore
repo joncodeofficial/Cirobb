@@ -3,3 +3,4 @@ build/
 lib/
 .DS_Store
 build-web/
+.vscode/
