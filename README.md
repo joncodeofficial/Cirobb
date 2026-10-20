@@ -15,8 +15,25 @@ Additionally, it features a straightforward 2D Collision Detection system that e
 
 ## ⚡ Demos & Examples
 
-- [WebAssembly Demo (v1.1.8)](https://joncodeofficial.github.io/Cirobb-wasm)
+- [WebAssembly Demo](https://joncodeofficial.github.io/Cirobb/) (built and deployed from `main`)
 - [YouTube Demo Video (v1.1.4)](https://youtu.be/j2p6qmOVA7M)
+
+## Building
+
+Desktop:
+
+```bash
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build
+./bin/demo
+```
+
+Web (requires the [Emscripten SDK](https://emscripten.org/docs/getting_started/downloads.html)):
+
+```bash
+./build_web.sh
+python3 -m http.server -d build-web/web
+```
 
 ## 🔜 Future Features
 
