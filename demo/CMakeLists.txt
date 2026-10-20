@@ -50,13 +50,11 @@ if (EMSCRIPTEN)
   target_link_libraries(demo cirobb)
 
   # Copy the web page next to the generated files
-  foreach(WEB_FILE index.html main.js style.css)
-    add_custom_command(TARGET demo POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        ${CMAKE_CURRENT_SOURCE_DIR}/web/${WEB_FILE}
-        $<TARGET_FILE_DIR:demo>/${WEB_FILE}
-    )
-  endforeach()
+  add_custom_command(TARGET demo POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+      ${CMAKE_CURRENT_SOURCE_DIR}/web/index.html
+      $<TARGET_FILE_DIR:demo>/index.html
+  )
 else()
   target_include_directories(demo PRIVATE ${CMAKE_SOURCE_DIR}/vendor/imgui/backends)
 
