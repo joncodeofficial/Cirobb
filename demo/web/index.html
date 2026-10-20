@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+    />
+    <title>Cirobb WASM</title>
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <canvas
+      id="canvas"
+      width="100"
+      height="100"
+      oncontextmenu="event.preventDefault()"
+    ></canvas>
+
+    <div class="container-controls">
+      <div class="container-controls-top">
+        <span>Cirobb WASM</span>
+        <div class="pause-container">
+          <input type="checkbox" name="pause" id="pause" />
+          <label for="pause">Pause</label>
+        </div>
+      </div>
+
+      <div class="select-container">
+        <select id="options">
+          <!-- Values match the correction enum in cirobb/Scene.h -->
+          <option value="2">Non-Linear-Gauss-Seidel</option>
+          <option value="1">Baumgarte Stabilization</option>
+          <option value="0">None</option>
+        </select>
+      </div>
+
+      <ul>
+        <li>Left-click: Add <strong>OBB</strong></li>
+        <li>Right-click: Add <strong>CIRCLE</strong></li>
+      </ul>
+    </div>
+
+    <script src="main.js"></script>
+    <script src="index.js"></script>
+  </body>
+</html>

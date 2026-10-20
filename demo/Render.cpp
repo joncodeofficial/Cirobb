@@ -1,17 +1,6 @@
 #include "Render.h"
 
 
-void DrawText(const int& x, const int& y, char* string)
-{
-	ImVec2 p;
-	p.x = real(x);
-	p.y = real(y);
-	ImGui::Begin("Overlay", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoScrollbar);
-	ImGui::SetCursorPos(p);
-	ImGui::TextColored(ImColor(210, 210, 210, 255), "%s", string);
-	ImGui::End();
-}
-
 void DrawShape(const Shape* shape)
 {
 	switch (shape->type)
@@ -46,7 +35,7 @@ void DrawCircle(const Shape* shape)
 	glBlendFunc (GL_SRC_COLOR, GL_ONE_MINUS_SRC_ALPHA);
 	glColor4f(0.4f, 0.4f, 0.4f, 0.4f);
 	
-	glBegin(GL_POLYGON);
+	glBegin(GL_TRIANGLE_FAN);
 	for(int i = 0; i <= countVerts; i++)
 	{
 	  glVertex2f(verts[i].x, verts[i].y);
@@ -90,7 +79,7 @@ void DrawObb(const Shape* shape)
 	glEnable(GL_BLEND);
 	glBlendFunc (GL_SRC_COLOR, GL_ONE_MINUS_SRC_ALPHA);
 	glColor4f(0.4f, 0.4f, 0.4f, 0.4f);
-	glBegin(GL_POLYGON);
+	glBegin(GL_TRIANGLE_FAN);
 	glVertex2f( p1.x, p1.y);
 	glVertex2f( p2.x, p2.y);
 	glVertex2f(-p1.x,-p1.y);

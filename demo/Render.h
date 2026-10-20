@@ -1,14 +1,8 @@
 #ifndef RENDER_H
 #define RENDER_H
 
-#include "imgui/imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl2.h"
-
 #include "../cirobb/Shape.h"
 #include "GLFW/glfw3.h"
-
-void DrawText(const int& x, const int& y, char* string);
 
 void DrawShape(const Shape* shape);
 
