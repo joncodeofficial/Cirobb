@@ -8,7 +8,7 @@
  * It is provided "as is" without express or implied warranty.
  **************************************************************************/
 
-#include "../glad/glad.h"
+#include "glad/glad.h"
 #include "../cirobb/Scene.h"
 #include "Render.h"
 namespace

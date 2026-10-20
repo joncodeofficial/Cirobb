@@ -2,16 +2,16 @@
 set(DEMO_INCLUDE_FILES
 
   Render.h
-  imgui_impl_glfw.h
-  imgui_impl_opengl2.h
+  ${CMAKE_SOURCE_DIR}/vendor/imgui/backends/imgui_impl_glfw.h
+  ${CMAKE_SOURCE_DIR}/vendor/imgui/backends/imgui_impl_opengl2.h
 )
 
 
 # Variable SOURCE_FILES
 set(DEMO_SOURCE_FILES
 
-  imgui_impl_glfw.cpp
-  imgui_impl_opengl2.cpp
+  ${CMAKE_SOURCE_DIR}/vendor/imgui/backends/imgui_impl_glfw.cpp
+  ${CMAKE_SOURCE_DIR}/vendor/imgui/backends/imgui_impl_opengl2.cpp
   Render.cpp
   Main.cpp
 )
@@ -24,6 +24,9 @@ source_group(src FILES ${SOURCE_FILES})
 
 # Proyecto ejecutable con el archivo fuente VAR INCLUDE_FILES Y VAR SOURCE_FILES
 add_executable(demo ${DEMO_INCLUDE_FILES} ${DEMO_SOURCE_FILES})
+
+
+target_include_directories(demo PRIVATE ${CMAKE_SOURCE_DIR}/vendor/imgui/backends)
 
 
 target_link_libraries(

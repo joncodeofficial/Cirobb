@@ -16,11 +16,11 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
 # Dependencies
 find_package(OpenGL REQUIRED)
-add_subdirectory(glad)
+add_subdirectory(vendor/glad)
+add_subdirectory(vendor/glfw)
+add_subdirectory(vendor/imgui)
 add_subdirectory(cirobb)
 add_subdirectory(demo)
-add_subdirectory(glfw)
-add_subdirectory(imgui)
 
 # Default startup project for Visual Studio
 if (MSVC)

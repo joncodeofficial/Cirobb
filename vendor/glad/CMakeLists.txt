@@ -12,6 +12,8 @@ add_library(glad STATIC
   ${GLAD_SOURCE_FILES} 
 )
 
+target_include_directories(glad PUBLIC ..)
+
 # Esto es usado para crear carpetas en visual studio.
 source_group(include FILES ${GLAD_INCLUDE_FILES})
 source_group(src FILES ${GLAD_SOURCE_FILES})
