@@ -16,16 +16,13 @@ endif()
 # Compilation database for clangd and other tools
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# Output directories for binaries and libraries
+# Output directories for executables. The web build keeps its own folder
 if (EMSCRIPTEN)
-	# Keep the web build out of the desktop bin/ and lib/
 	set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 	set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/web)
 else()
-	set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
-	set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
-	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
+	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 endif()
 
 # Dependencies (Emscripten provides GLFW and WebGL itself)

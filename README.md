@@ -23,7 +23,7 @@ Desktop:
 ```bash
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build
-./bin/demo
+./build/bin/demo
 ```
 
 Web (requires the [Emscripten SDK](https://emscripten.org/docs/getting_started/downloads.html)):
