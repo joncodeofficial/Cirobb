@@ -19,66 +19,55 @@
 #include "../cirobb/Scene.h"
 #include "Render.h"
 
-namespace
-{
-  GLFWwindow *mainWindow = NULL;
+namespace {
+GLFWwindow *mainWindow = nullptr;
 
-  int width = 1200;
-  int height = 720;
-  real zoom = 10;
-  real viewScale = 0;
+int width = 1200;
+int height = 720;
+real zoom = 10;
+real viewScale = 0;
 
-  bool pause = false;
-  real timeStep = 1.0f / 60.0f;
-  Vec2 gravity(0.0f, -10.0f);
+bool pause = false;
+real timeStep = 1.0f / 60.0f;
+Vec2 gravity(0.0f, -10.0f);
 
-  real mouseX = 0, mouseY = 0;
+real mouseX = 0, mouseY = 0;
 
-  Scene scene(gravity, 10, 5);
+Scene scene(gravity, 10, 5);
 
-  // Web only: filters the duplicated mouse events that touch devices produce
-  bool canCreateBody = true;
-  double lastTouchTime = 0.0;
-  const double TOUCH_COOLDOWN = 0.2;
-}
+// Web only: filters the duplicated mouse events that touch devices produce
+bool canCreateBody = true;
+double lastTouchTime = 0.0;
+const double TOUCH_COOLDOWN = 0.2;
+} // namespace
 
-const char *PositionStrings[] =
-    {
-        "None",
-        "Baumgarte Stabilization",
-        "Non-Linear-Gauss-Seidel"};
+const char *PositionStrings[] = {"None", "Baumgarte Stabilization", "Non-Linear-Gauss-Seidel"};
 
 #ifdef __EMSCRIPTEN__
 // Called from the web page (web/main.js)
-extern "C"
-{
-  bool setPause(bool value)
-  {
-    pause = value;
-    return pause;
-  }
+extern "C" {
+bool setPause(bool value) {
+  pause = value;
+  return pause;
+}
 
-  int setCorrectionType(int value)
-  {
-    Scene::CorrectionType = value;
-    return Scene::CorrectionType;
-  }
+int setCorrectionType(int value) {
+  Scene::CorrectionType = value;
+  return Scene::CorrectionType;
+}
 
-  bool setTouchDevice(bool value)
-  {
-    canCreateBody = value;
-    return canCreateBody;
-  }
+bool setTouchDevice(bool value) {
+  canCreateBody = value;
+  return canCreateBody;
+}
 }
 #endif
 
-static void glfwErrorCallback(int error, const char *description)
-{
+static void glfwErrorCallback(int error, const char *description) {
   printf("GLFW error %d: %s\n", error, description);
 }
 
-static void Start(void)
-{
+static void Start() {
   Scene::CorrectionType = NGS;
 
   scene.Clear();
@@ -99,17 +88,13 @@ static void Start(void)
 }
 
 // Left button: box, right button: circle
-static void CreateBody(int button)
-{
+static void CreateBody(int button) {
   RigidBody *b;
 
-  if (button == GLFW_MOUSE_BUTTON_LEFT)
-  {
+  if (button == GLFW_MOUSE_BUTTON_LEFT) {
     OBB temp(Vec2(1.5f, 1.5f));
     b = new RigidBody(temp, Vec2(mouseX, mouseY), 0.0f);
-  }
-  else
-  {
+  } else {
     Circle temp(0.75f);
     b = new RigidBody(temp, Vec2(mouseX, mouseY), 0.0f);
   }
@@ -118,45 +103,34 @@ static void CreateBody(int button)
   scene.Add(b);
 }
 
-static void Keyboard(GLFWwindow *window, int key, int scancode, int action, int mods)
-{
-  if (action != GLFW_PRESS)
-    return;
+static void Keyboard(GLFWwindow *window, int key, int scancode, int action, int mods) {
+  if (action != GLFW_PRESS) return;
 
-  switch (key)
-  {
-  case GLFW_KEY_ESCAPE:
-    glfwSetWindowShouldClose(mainWindow, GL_TRUE);
-    break;
+  switch (key) {
+  case GLFW_KEY_ESCAPE: glfwSetWindowShouldClose(mainWindow, GL_TRUE); break;
 
-  case GLFW_KEY_P:
-    pause = !pause;
-    break;
+  case GLFW_KEY_P: pause = !pause; break;
 
   case GLFW_KEY_SPACE:
     Scene::CorrectionType = Scene::CorrectionType > 1 ? 0 : Scene::CorrectionType + 1;
     break;
+  default: break;
   }
 }
 
-static void MouseMotion(GLFWwindow *window, double x, double y)
-{
-  mouseX = ((real)x - width * 0.5) * viewScale;
-  mouseY = ((real)y - height * 0.5) * -viewScale;
+static void MouseMotion(GLFWwindow *window, double x, double y) {
+  mouseX = ((real)x - static_cast<real>(width) * 0.5f) * viewScale;
+  mouseY = ((real)y - static_cast<real>(height) * 0.5f) * -viewScale;
 }
 
-static void MouseButton(GLFWwindow *window, int button, int action, int mods)
-{
-  if (button != GLFW_MOUSE_BUTTON_LEFT && button != GLFW_MOUSE_BUTTON_RIGHT)
-    return;
+static void MouseButton(GLFWwindow *window, int button, int action, int mods) {
+  if (button != GLFW_MOUSE_BUTTON_LEFT && button != GLFW_MOUSE_BUTTON_RIGHT) return;
 
 #ifdef __EMSCRIPTEN__
   double currentTime = glfwGetTime();
 
-  if (action == GLFW_PRESS)
-  {
-    if (currentTime - lastTouchTime < TOUCH_COOLDOWN)
-    {
+  if (action == GLFW_PRESS) {
+    if (currentTime - lastTouchTime < TOUCH_COOLDOWN) {
       canCreateBody = true;
       return;
     }
@@ -166,23 +140,18 @@ static void MouseButton(GLFWwindow *window, int button, int action, int mods)
     MouseMotion(window, x, y);
 
     lastTouchTime = currentTime;
-  }
-  else if (action == GLFW_RELEASE && canCreateBody)
-  {
+  } else if (action == GLFW_RELEASE && canCreateBody) {
     canCreateBody = false;
     CreateBody(button);
   }
 #else
-  if (ImGui::GetIO().WantCaptureMouse)
-    return;
+  if (ImGui::GetIO().WantCaptureMouse) return;
 
-  if (action == GLFW_RELEASE)
-    CreateBody(button);
+  if (action == GLFW_RELEASE) CreateBody(button);
 #endif
 }
 
-static void Reshape(GLFWwindow *, int w, int h)
-{
+static void Reshape(GLFWwindow *_, int w, int h) {
   width = w, height = h > 0 ? h : 1;
 
   int fbW, fbH;
@@ -195,20 +164,16 @@ static void Reshape(GLFWwindow *, int w, int h)
 
   real aspect = real(width) / real(height);
 
-  if (width >= height)
-  {
-    viewScale = zoom / (height * 0.5);
+  if (width >= height) {
+    viewScale = zoom / static_cast<real>(height * 0.5);
     glOrtho(-zoom * aspect, zoom * aspect, -zoom, zoom, -1.0, 1.0);
-  }
-  else
-  {
-    viewScale = zoom / (width * 0.5);
+  } else {
+    viewScale = zoom / static_cast<real>(width * 0.5);
     glOrtho(-zoom, zoom, -zoom / aspect, zoom / aspect, -1.0, 1.0);
   }
 }
 
-static void Frame(void)
-{
+static void Frame() {
 #ifdef __EMSCRIPTEN__
   glfwGetFramebufferSize(mainWindow, &width, &height);
 #endif
@@ -223,8 +188,7 @@ static void Frame(void)
 
   ImGui::SetNextWindowPos(ImVec2(8.0f, 8.0f), ImGuiCond_Always);
   ImGui::Begin("Controls", nullptr,
-               ImGuiWindowFlags_AlwaysAutoResize |
-                   ImGuiWindowFlags_NoMove |
+               ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove |
                    ImGuiWindowFlags_NoTitleBar);
 
   ImGui::Combo("Position", &Scene::CorrectionType, PositionStrings, IM_ARRAYSIZE(PositionStrings));
@@ -235,11 +199,9 @@ static void Frame(void)
   ImGui::End();
 #endif
 
-  if (!pause)
-    scene.Step(timeStep);
+  if (!pause) scene.Step(timeStep);
 
-  for (RigidBody *body : scene.bodies)
-    DrawShape(body->shape);
+  for (RigidBody *body : scene.bodies) DrawShape(body->shape);
 
 #ifndef __EMSCRIPTEN__
   ImGui::Render();
@@ -250,20 +212,17 @@ static void Frame(void)
   glfwPollEvents();
 }
 
-int main(int args, char **argv)
-{
+int main(int args, char **argv) {
   glfwSetErrorCallback(glfwErrorCallback);
 
-  if (glfwInit() == 0)
-  {
+  if (glfwInit() == 0) {
     fprintf(stderr, "Failed to initialize GLFW\n");
     return -1;
   }
 
   mainWindow = glfwCreateWindow(width, height, "Cirobb 1.1.12", NULL, NULL);
 
-  if (mainWindow == NULL)
-  {
+  if (mainWindow == NULL) {
     fprintf(stderr, "Failed to open GLFW mainWindow.\n");
     glfwTerminate();
     return -1;
@@ -273,8 +232,7 @@ int main(int args, char **argv)
 
 #ifndef __EMSCRIPTEN__
   // Load OpenGL functions using glad
-  if (gladLoadGL() == 0)
-  {
+  if (gladLoadGL() == 0) {
     fprintf(stderr, "Failed to load OpenGL.\n");
     glfwTerminate();
     return -1;
@@ -303,8 +261,7 @@ int main(int args, char **argv)
 #ifdef __EMSCRIPTEN__
   emscripten_set_main_loop(Frame, 0, true);
 #else
-  while (!glfwWindowShouldClose(mainWindow))
-    Frame();
+  while (glfwWindowShouldClose(mainWindow) == 0) Frame();
 
   ImGui_ImplOpenGL2_Shutdown();
   ImGui_ImplGlfw_Shutdown();

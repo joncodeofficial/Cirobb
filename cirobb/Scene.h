@@ -32,13 +32,13 @@ struct Scene
   
   Scene(const Vec2& _gravity, const int& _iterVel, const int& _iterPos) : gravity(_gravity), iterVel(_iterVel), iterPos(_iterPos) {;}
   
-  void Clear(void);
+  void Clear();
   
   void Add(RigidBody*);
   
   void Step(const real&);
   
-  void BroadPhase(void);
+  void BroadPhase();
 };
 
 #endif
