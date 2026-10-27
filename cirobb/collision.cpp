@@ -17,12 +17,10 @@
 Circle to Circle: there is a collision if |c2 - c1| <= r1 + r2
 
 * Penetration = |c2 - c1| - r1 - r2
-
 * Normal = (c2 - c1) / |c2 - c1|
+* ContactPoint = c1 + n * ((r1 - r2 + |c2 - c1|) * 0.5f)
 
-* ContactPoint = c1 + n * ((r1 - r2 + |c2 - c1|) * 0.5f) --> The point in the middle
-
-Degenerate case: the centers coincide, |c2 - c1| = 0. Handle it manually or ignore it.
+Degenerate case: |c2 - c1| = 0 (coincident centers).
 */
 void CircleToCircle(Manifold &m, Shape *c1, Shape *c2) {
   Vec2 distance = c2->body->position - c1->body->position;
@@ -44,15 +42,11 @@ void CircleToCircle(Manifold &m, Shape *c1, Shape *c2) {
 }
 
 /*
-Circle to OBB: move the circle to the local space of the OBB (an AABB) and find the closest point.
-Since a point has radius = 0 the problem reduces to |c2 - c1| <= r1. One contact point is enough.
+Circle to OBB: move the circle to the OBB local space and find the closest point. It reduces to
+|c2 - c1| <= r1, with one contact point.
 
-Case = |c2 - c1| == 0 ? Deep Penetration : Shallow Penetration
-
-* Shallow: the center of the circle is outside the OBB, so the closest point gives the normal,
-  penetration and contact point.
-
-* Deep: the center of the circle is inside the OBB, use the axis of minimum penetration.
+* Shallow (|c2 - c1| != 0): the center is outside the OBB.
+* Deep (|c2 - c1| == 0): the center is inside the OBB, use the axis of minimum penetration.
 */
 void CircleToOBB(Manifold &m, Shape *c1, Shape *b1) {
   Mat2 Rot(-b1->body->orientation);
@@ -71,9 +65,8 @@ void CircleToOBB(Manifold &m, Shape *c1, Shape *b1) {
 
   if (dy > c1->radius) return;
 
-  Vec2 closest; // Closest Point
+  Vec2 closest;
 
-  // 4 Conditions to Find the Closest Point of the Circle.
   if (-localSpace.x > width.x) closest.x = dx;
   else if (localSpace.x > width.x) closest.x = -dx;
   if (-localSpace.y > width.y) closest.y = dy;
@@ -109,11 +102,7 @@ void OBBToCircle(Manifold &m, Shape *A, Shape *B) {
   CircleToOBB(m, B, A);
 }
 
-/*
-OBB to OBB uses SAT (Separating Axis Theorem) to find the axis of minimum penetration.
-Each OBB has 2 pairs of parallel edges, so 4 normals are tested instead of 8.
-Known problems: inconsistent points, flip-flop, similar edges, rotation rounding errors.
-*/
+// OBB to OBB: SAT (Separating Axis Theorem), 4 normals are tested (2 parallel edge pairs per OBB)
 inline static int8_t FindIncidentEdgeIndex(const real &projection1, const real &projection2) {
   int8_t i = projection1 < 0.0f ? 1 : -1;
 

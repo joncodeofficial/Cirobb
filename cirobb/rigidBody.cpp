@@ -22,11 +22,12 @@ void RigidBody::Dynamic(const real &density) {
   this->torque = 0.0f;
   this->velocity.SetZero();
   this->force.SetZero();
-  this->friction = 0.3f;        // Range[0..1]
-  this->restitution = 0.3f;     // Range[0..1]
-  this->angularDamping = 0.02f; // Range[0..1]
-  this->linearDamping = 0.0f;   // Range[0..1]
-  this->gravityScale = 1.0f;    // Range[0..1]
+  // Values in the range [0..1]
+  this->friction = 0.3f;
+  this->restitution = 0.3f;
+  this->angularDamping = 0.02f;
+  this->linearDamping = 0.0f;
+  this->gravityScale = 1.0f;
   this->shape->CalculateMassInertia(density);
 }
 
@@ -35,10 +36,11 @@ void RigidBody::Static() {
   this->torque = 0.0f;
   this->velocity.SetZero();
   this->force.SetZero();
-  this->friction = 1.0f;       // Range[0..1]
-  this->restitution = 0.0f;    // Range[0..1]
-  this->angularDamping = 0.0f; // Range[0..1]
-  this->linearDamping = 0.0f;  // Range[0..1]
-  this->gravityScale = 0.0f;   // Range[0..1]
+  // Values in the range [0..1]
+  this->friction = 1.0f;
+  this->restitution = 0.0f;
+  this->angularDamping = 0.0f;
+  this->linearDamping = 0.0f;
+  this->gravityScale = 0.0f;
   this->shape->CalculateMassInertia(0);
 }

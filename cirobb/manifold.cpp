@@ -20,8 +20,7 @@ Manifold::Manifold(RigidBody *a, RigidBody *b) : numContacts(0), A(a), B(b) {
   Dispatcher[A->shape->type][B->shape->type](*this, A->shape, B->shape);
 }
 
-// If the manifold already exists, contact points that match (id or distance heuristic) keep their
-// accumulated impulses for Warm Starting. Reference Erin Catto
+// Warm Starting for the matching contacts (id or distance heuristic).
 void Manifold::Update(Contact *newContacts, const int8_t &numNewContacts) {
 
   Contact mergedContacts[2];
@@ -63,11 +62,7 @@ void Manifold::WarmStarting() {
 }
 
 /*
-PreStep: inverse effective mass of each contact point and Baumgarte Stabilization.
-
-A = J * M⁻¹ * Jt   (Jt = transposed Jacobian)
-
-In 2D, with X as the cross product, for 1 constraint between 2 rigid bodies:
+Inverse effective mass: A = J * M⁻¹ * Jt (Jt = transposed Jacobian). In 2D, with X as cross product:
 
                  J                                M⁻¹                       Jt
 [nx, ny, n X ra, -nx, -ny, -n X rb] |m1⁻¹  0      0     0     0       0| | nx    |
@@ -78,12 +73,9 @@ In 2D, with X as the cross product, for 1 constraint between 2 rigid bodies:
                                     |0     0      0     0     0    I2⁻¹| |-n X rb|
 
 Normal:  A⁻¹  = m1⁻¹ + m2⁻¹ + (n X r1)^2 * I1⁻¹ + (n X r2)^2 * I2⁻¹
-
 Tangent: At⁻¹ = m1⁻¹ + m2⁻¹ + (t X r1)^2 * I1⁻¹ + (t X r2)^2 * I2⁻¹
 
-Baumgarte transforms the Position Error into a Velocity Error:
-
-Velocity Bias = x / Δt * ϵ
+Baumgarte (position error to velocity error): Velocity Bias = x / Δt * ϵ
 */
 void Manifold::PreStep(const real &dt) {
   const real k_slop = 0.004f;
@@ -122,31 +114,22 @@ void Manifold::PreStep(const real &dt) {
   }
 }
 
-/****************************************************************************
- Non-Penetration Constraint = (v2 - v1) * J >= 0
+/*
+Non-Penetration Constraint = (v2 - v1) * J >= 0
+Coulomb Friction law |λt| <= uλn
 
- Coulomb Friction law |λt| <= uλn.
+b = (v2 - v1) * J   Relative normal velocity
+A = J * M⁻¹ * Jt    Inverse effective mass
+x = λ = -b * A⁻¹    Constraint impulse (signed magnitude)
 
- We Resolve the Non-penetration Constraint resolving: x = -b * A⁻¹
-
- b = (v2 - v1) * J  Relative normal Velocity
-
- A = J * M⁻¹ * Jt  Inverse Effective Mass
-
- x = λ = |P| = -b * A⁻¹; // The Lambda is constraint impulse signed magnitude.
-
- P = Jt * λ;
-
- L = P X r;
-
- v2 = v1 + P * m⁻¹
-
- ω2 = ω1 + L * I⁻¹
-*****************************************************************************/
+P = Jt * λ
+L = P X r
+v2 = v1 + P * m⁻¹
+ω2 = ω1 + L * I⁻¹
+*/
 void Manifold::ApplyImpulse() {
-  // Friction Constraint based on Coulomb law: |λt| <= uλn "OR" -uλn <= λt <= uλn
 
-  Vec2 tangent = Cross(normal, -1.0f); // Vector Tangent
+  Vec2 tangent = Cross(normal, -1.0f);
 
   for (int i = 0; i < numContacts; i++) {
     Contact *c = contacts + i;
@@ -155,9 +138,9 @@ void Manifold::ApplyImpulse() {
     Vec2 rb = B->position - c->position;
 
     Vec2 dv = B->velocity + Cross(rb, B->angularVelocity) - A->velocity -
-              Cross(ra, A->angularVelocity); // (v2 - v1) Δv Relative Velocity
+              Cross(ra, A->angularVelocity);
 
-    real vt = dv * tangent; // Tangent Relative Velocity
+    real vt = dv * tangent;
 
     real dPt = -vt * c->massTangent; // Ax + b = 0 --> x = -b * A⁻¹;
 
@@ -174,8 +157,6 @@ void Manifold::ApplyImpulse() {
     B->angularVelocity += Cross(P, rb) * B->invI;
   }
 
-  // Non-Penetration Constraint = (v2 - v1) * J >= 0
-
   for (int i = 0; i < numContacts; i++) {
     Contact *c = contacts + i;
 
@@ -183,9 +164,9 @@ void Manifold::ApplyImpulse() {
     Vec2 rb = B->position - c->position;
 
     Vec2 dv = B->velocity + Cross(rb, B->angularVelocity) - A->velocity -
-              Cross(ra, A->angularVelocity); // (v2 - v1) Δv Relative Velocity
+              Cross(ra, A->angularVelocity);
 
-    real vn = dv * normal; // Normal Relative Velocity
+    real vn = dv * normal;
 
     real dPn = -(vn + c->restitution + c->bias) * c->massNormal; // Ax + b = 0 --> x = -b * A⁻¹;
 
@@ -242,17 +223,11 @@ real Manifold::RecalculatePenetration(Vec2 &normal, Vec2 &position, const int &i
   return 0;
 }
 
-/****************************************
-  C(x + dx) ~ = C(x) + J * dx
-
-  dx = M ^ -1 * J ^ T * λ
-
-  C(x) + J * M ^ -1 * J ^ T * λ = 0
-
-  We Resolve for the lambda λ
-
-  λ = -C(x) / J * M ^ -1 * J ^ T
-****************************************/
+/*
+C(x + dx) ~ = C(x) + J * dx
+dx = M ^ -1 * J ^ T * λ
+C(x) + J * M ^ -1 * J ^ T * λ = 0  -->  λ = -C(x) / J * M ^ -1 * J ^ T
+*/
 void Manifold::ApplyCorrection() const {
   const real k_slop = 0.002f;
   const real k_biasFactor = 0.2f;

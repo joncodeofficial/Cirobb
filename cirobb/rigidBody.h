@@ -16,21 +16,21 @@
 struct Shape;
 
 struct RigidBody {
-  Vec2 position;        // Position
-  Vec2 velocity;        // Linear Velocity
-  Vec2 force;           // Linear Force
-  real orientation;     // Orientation or Angle
-  real angularVelocity; // Angular Velocity
-  real torque;          // Angular Force or Torque
+  Vec2 position;
+  Vec2 velocity;
+  Vec2 force;
+  real orientation;
+  real angularVelocity;
+  real torque;
   real m;               // Mass
   real invm;            // Inverse Mass
   real I;               // Inertia
   real invI;            // Inverse Inertia
-  real friction;        // Friction
-  real restitution;     // Restitution or Bounce
-  real linearDamping;   // Linear  Damping
-  real angularDamping;  // Angular Damping
-  real gravityScale;    // Gravity Scale
+  real friction;
+  real restitution;
+  real linearDamping;
+  real angularDamping;
+  real gravityScale;
 
   Shape *shape; // Circle, OBB
 

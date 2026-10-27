@@ -22,7 +22,7 @@ struct Scene
 {
   static int CorrectionType; // Baumgarte Stabilization  "o"  NonLinear-GaussSeidel
   
-  Vec2 gravity; // Gravity Vector
+  Vec2 gravity;
   
   int iterPos, iterVel;
   

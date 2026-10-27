@@ -17,7 +17,7 @@ void DrawCircle(const Shape* shape)
 {
 	const RigidBody* body = shape->body;
 
-	const int  countVerts = 40; // Number of Vertices
+	const int  countVerts = 40;
 	const real valueVerts = PI * 2 / countVerts;
 	Vec2 verts[countVerts + 1];
  

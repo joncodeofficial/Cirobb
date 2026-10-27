@@ -30,23 +30,23 @@ struct FeatureID {
 struct Contact {
   Contact() : Pn(0.0f), Pt(0.0f), bias(0.0f), restitution(0.0f), warmPoint(FLT_MAX, 0.0f) { ; }
 
-  Vec2 position;    // Position of Contact Point
+  Vec2 position;
   Vec2 warmPoint;   // Position of Warm Contact Point
   FeatureID id;     // Feature ID for Warm Starting
-  real penetration; // Penetration Depth
+  real penetration;
   real Pn;          // Accumulated Normal Impulse
   real Pt;          // Accumulated Tangent Impulse
   real massNormal;  // Normal Effective Mass
   real massTangent; // Tangent Effective Mass
   real bias;        // Bias For Baumgarte Stabilization
-  real restitution; // Restitution To Bounce
+  real restitution;
 };
 
 struct PostPosition {
-  real oldOrientationA; // Old Orientation A
-  real oldOrientationB; // Old Orientation B
-  Vec2 oldPointA[2];    // Old Contact Point A
-  Vec2 oldPointB[2];    // Old Contact Point B
+  real oldOrientationA;
+  real oldOrientationB;
+  Vec2 oldPointA[2];
+  Vec2 oldPointB[2];
 
   PostPosition() : oldOrientationA(0.0f), oldOrientationB(0.0f) { ; }
 };
@@ -73,7 +73,7 @@ struct Manifold {
   RigidBody *A;
   RigidBody *B;
 
-  Vec2 normal; // Normal Vector
+  Vec2 normal;
 
   Manifold(RigidBody *, RigidBody *);
 

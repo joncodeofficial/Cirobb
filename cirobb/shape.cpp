@@ -14,17 +14,12 @@
 The mass is proportional to the geometric area:
 
 * Circle Area = Radius * PI * PI
-
 * Rectangle Area = width * height
 
-The inertia tensor is the resistance of the body to rotation. A 2D body has 3 degrees of freedom
-(X, Y translation and Z rotation), so the inertia tensor is a scalar.
+The 2D inertia tensor is a scalar (rotation only about Z): Inertia = mass * Distance^2
 
-Inertia = mass * Distance^2
-
-1- Inertia of a Circle = mass * Radius * Radius / 2.0
-
-2- Inertia of a Rectangle = mass * (x * x + y * y) / 12.0
+* Circle = mass * Radius * Radius / 2.0
+* Rectangle = mass * (x * x + y * y) / 12.0
 */
 
 Circle::Circle(const real &_radius) {

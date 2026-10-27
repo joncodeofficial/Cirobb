@@ -54,31 +54,20 @@ void Scene::BroadPhase() {
   }
 }
 
-/**********************************************************************************************
-There are many ways to integrate the kinematic equations of motion. But the semi-implicit or
-(symplectic) Euler It is the most widely used method in physics engines in Real-Time due to its
-stability and speed.
-
-Semi-Implicit Euler or Symplectic Euler
-
-Linear movement equations
+/*
+Semi-Implicit (Symplectic) Euler:
 
 v = v + P * M⁻¹ + Fext * M⁻¹ * Δt
-
 X = X + C * Δt
-
-Rotational movement equations
-
 ω = ω + L * I⁻¹ + τext * I⁻¹ * Δt
-
 θ = θ + ω * Δt
-***********************************************************************************************/
+*/
 void Scene::Step(const real &dt) {
   BroadPhase();
 
   for (auto *b : bodies) {
-    b->velocity += (b->force * b->invm + gravity * b->gravityScale) * dt; // v = v + Fext * M⁻¹ * Δt
-    b->angularVelocity += b->torque * b->invI * dt;                       // ω = ω + τext * I⁻¹ * Δt
+    b->velocity += (b->force * b->invm + gravity * b->gravityScale) * dt;
+    b->angularVelocity += b->torque * b->invI * dt;
     b->velocity *= pow(0.97f, b->linearDamping);                          // min = 0.97f && max = 1;
     b->angularVelocity *= pow(0.97f, b->angularDamping);                  // min = 0.97f && max = 1;
   }
@@ -88,16 +77,12 @@ void Scene::Step(const real &dt) {
   }
 
   for (ManifoldAux temp = manifolds.begin(); temp != manifolds.end(); temp++) {
-    // v = v + P * M⁻¹
-    // ω = ω + L * I⁻¹
     temp->second.WarmStarting();
   }
 
   for (int i = 0; i < iterVel; i++) // (SI/PGS) Sequential-Impulse/Projected-Gauss-Seidel
   {
     for (ManifoldAux temp = manifolds.begin(); temp != manifolds.end(); temp++) {
-      // v = v + P * M⁻¹
-      // ω = ω + L * I⁻¹
       temp->second.ApplyImpulse();
     }
   }
@@ -113,8 +98,8 @@ void Scene::Step(const real &dt) {
   }
 
   for (auto *b : bodies) {
-    b->position += b->velocity * dt;           // x = x + v * Δt
-    b->orientation += b->angularVelocity * dt; // θ = θ + ω * Δt
+    b->position += b->velocity * dt;
+    b->orientation += b->angularVelocity * dt;
     b->force.SetZero();
     b->torque = 0.0f;
   }

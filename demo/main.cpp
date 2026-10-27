@@ -231,7 +231,6 @@ int main(int args, char **argv) {
   glfwMakeContextCurrent(mainWindow);
 
 #ifndef __EMSCRIPTEN__
-  // Load OpenGL functions using glad
   if (gladLoadGL() == 0) {
     fprintf(stderr, "Failed to load OpenGL.\n");
     glfwTerminate();
