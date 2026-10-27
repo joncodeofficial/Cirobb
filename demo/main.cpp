@@ -41,7 +41,7 @@ double lastTouchTime = 0.0;
 const double TOUCH_COOLDOWN = 0.2;
 } // namespace
 
-const char *PositionStrings[] = {"None", "Baumgarte Stabilization", "Non-Linear-Gauss-Seidel"};
+const char *PositionStrings[] = {"Baumgarte Stabilization", "Non-Linear-Gauss-Seidel"};
 
 #ifdef __EMSCRIPTEN__
 // Called from the web page (web/main.js)
@@ -112,7 +112,7 @@ static void Keyboard(GLFWwindow *window, int key, int scancode, int action, int 
   case GLFW_KEY_P: pause = !pause; break;
 
   case GLFW_KEY_SPACE:
-    Scene::CorrectionType = Scene::CorrectionType > 1 ? 0 : Scene::CorrectionType + 1;
+    Scene::CorrectionType = Scene::CorrectionType > 0 ? 0 : Scene::CorrectionType + 1;
     break;
   default: break;
   }

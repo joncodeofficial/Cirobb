@@ -16,11 +16,11 @@
 #include <vector>
 #include "manifold.h"
 
-enum {NONE = 0, BAUMGARTE, NGS};
+enum {BAUMGARTE = 0, NGS};
 
 struct Scene
 {
-  static int CorrectionType; // None  "o"  Baumgarte Stabilization  "o"  NonLinear-GaussSeidel
+  static int CorrectionType; // Baumgarte Stabilization  "o"  NonLinear-GaussSeidel
   
   Vec2 gravity; // Gravity Vector
   

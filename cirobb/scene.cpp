@@ -13,7 +13,7 @@
 typedef std::pair<ManifoldKey, Manifold> ManPair;
 typedef std::map<ManifoldKey, Manifold>::iterator ManifoldAux;
 
-int Scene::CorrectionType = NONE;
+int Scene::CorrectionType = NGS;
 
 void Scene::Add(RigidBody *body) { bodies.push_back(body); }
 
