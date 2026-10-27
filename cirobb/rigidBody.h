@@ -1,5 +1,5 @@
 ﻿/*************************************************************************
- * Copyright (c) 2019-2021 Jonathan Peña
+ * Copyright (c) 2019-2026 Jonathan Peña
  * Permission to use, copy, modify, distribute and sell this software
  * and its documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies.
@@ -34,13 +34,10 @@ struct RigidBody {
 
   Shape *shape; // Circle, OBB
 
-  // Constructor of RigidBody
   RigidBody(Shape &, const Vec2 &, const real &);
 
-  // Sets Dynamic Body
   void Dynamic(const real &Density);
 
-  // Sets Static Body.
   void Static();
 };
 #endif

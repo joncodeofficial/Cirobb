@@ -1,5 +1,5 @@
 ﻿/*************************************************************************
- * Copyright (c) 2019-2021 Jonathan Peña
+ * Copyright (c) 2019-2026 Jonathan Peña
  * Permission to use, copy, modify, distribute and sell this software
  * and its documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies.
@@ -17,7 +17,6 @@ RigidBody::RigidBody(Shape &shape, const Vec2 &_position, const real &_orientati
   this->shape->body = this;
 }
 
-// Method that sets rigid body values to Dynamic
 void RigidBody::Dynamic(const real &density) {
   this->angularVelocity = 0.0f;
   this->torque = 0.0f;
@@ -31,7 +30,6 @@ void RigidBody::Dynamic(const real &density) {
   this->shape->CalculateMassInertia(density);
 }
 
-// Method that sets rigid body values to static
 void RigidBody::Static() {
   this->angularVelocity = 0.0f;
   this->torque = 0.0f;

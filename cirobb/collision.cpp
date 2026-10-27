@@ -1,5 +1,5 @@
 ﻿/*************************************************************************
- * Copyright (c) 2019-2025 Jonathan Peña
+ * Copyright (c) 2019-2026 Jonathan Peña
  * Permission to use, copy, modify, distribute and sell this software
  * and its documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies.
@@ -10,53 +10,30 @@
 
 #include "collision.h"
 
-/************************************************************************************************
-Collision detection is one of the most important and problematic parts of physics engines.
-Collision detection gives us information about: normal, penetration, Contact Points, ETC.
-There are two types of Collision Detection: (DCD)Discrete Collision Detection and (CCD) Continuous
-Collision Detection. The Collision Detection type Found in this File.cpp is only (DCD). There are
-three Phases of Collision Detection: Broad Phase, Medium Phase and Narrow Phase. The Collision
-Detection Found in this File.cpp is only Narrow Phase. The Broad Phase is a brute force algorithm of
-complexity O (n^2). and has no Middle Phase.
+// Narrow phase only, discrete collision detection (DCD). The broad phase is brute force O(n^2).
+// Thank you very much Dirk Gregorius.
 
-Thank you very much Dirk Gregorius.
-*************************************************************************************************/
-
-/************************************************************************************************
-Collision Detection Circle to Circle is one of the fastest and easiest. All this due to its
-properties. The circle is a highly symmetrical Shape: each line through the center forms a line of
-reflection symmetry and has rotational symmetry around the center for each angle. so if(there is a
-point on the circunference and the origin is the center of the circle) then Radius = sqrt ((x -
-cx)^2 + (y - cy)^2). we taking advantage of the property that the circles are highly symmetrical We
-can obtain the minimum distance subtracting the centers and Radii. so if (|c2 - c1| <= r1 + r2))
-then there is a collision and we have to get this information for the solver. When a circle collides
-with any convex polygon a Single Contact Point is sufficient.
+/*
+Circle to Circle: there is a collision if |c2 - c1| <= r1 + r2
 
 * Penetration = |c2 - c1| - r1 - r2
 
 * Normal = (c2 - c1) / |c2 - c1|
 
-* ContactPoint = c1 + n * ((r1 - r2 + |c2 - c1|) * 0.5f) --> The point in the middle. This is a way
-of do it.
+* ContactPoint = c1 + n * ((r1 - r2 + |c2 - c1|) * 0.5f) --> The point in the middle
 
-There is a degenerate case and it happens when the centers of the circles coincide resulting in |c2
-- c1| = 0. This case must be manipulated manually or ignored.
-*************************************************************************************************/
+Degenerate case: the centers coincide, |c2 - c1| = 0. Handle it manually or ignore it.
+*/
 void CircleToCircle(Manifold &m, Shape *c1, Shape *c2) {
-  // Distance from center to center
   Vec2 distance = c2->body->position - c1->body->position;
 
-  // Sum of Radii
   real radius = c2->radius + c1->radius;
 
-  // Squared Magnitude |c2 - c1|^2
   real magnitude = distance.SquareMagnitude();
 
-  // Since we are only interested in knowing if there is a Collision.
-  // We can avoid the square root by raising the two members of the equation to power 2.
+  // Only a collision test is needed, so compare squared values and avoid the square root
   if (magnitude > radius * radius) return;
 
-  // Magnitude |c2 - c1|
   magnitude = sqrtf(magnitude);
 
   m.numContacts = 1;
@@ -66,30 +43,17 @@ void CircleToCircle(Manifold &m, Shape *c1, Shape *c2) {
       c1->body->position + m.normal * ((c1->radius - c2->radius + magnitude) * real(0.5));
 }
 
-/************************************************************************************************
-Collision Detection Circle to OBB(Oriented bounding box) Can be simplified to a Collision Detection
-Circle to AABB(Axis Aligned Bounding Box) by moving the OBB to its local space Transforming it in an
-AABB. So we have to find the closest point to the circle. After obtaining the closest point we have
-a problem of the form |c2 - c1| <= r1 + r2. But since a point has radius = 0 the problem is
-simplified to |c2 - c1| <= r1. if there is a collision we have to get our information for the Solver
-and then return it to the world space. Just one point of contact is sufficient.
-
-There are two cases:
-
-Shallow Penetration: The center of the circle is outside the OBB.
-
-Deep Penetration: The center of the circle is inside the OBB.
+/*
+Circle to OBB: move the circle to the local space of the OBB (an AABB) and find the closest point.
+Since a point has radius = 0 the problem reduces to |c2 - c1| <= r1. One contact point is enough.
 
 Case = |c2 - c1| == 0 ? Deep Penetration : Shallow Penetration
 
-if(We have a case of Shallow Penetration) then We have all the necessary information to calculate:
-normal, Penetration and Contact point.
+* Shallow: the center of the circle is outside the OBB, so the closest point gives the normal,
+  penetration and contact point.
 
-if(We have a case of Deep Penetration) then we have to find the axis of minimum penetration to
-calculate: Normal, Penetration and Contact Point.
-
-*************************************************************************************************/
-// Collision Detection Circle to Oriented Rectangle
+* Deep: the center of the circle is inside the OBB, use the axis of minimum penetration.
+*/
 void CircleToOBB(Manifold &m, Shape *c1, Shape *b1) {
   Mat2 Rot(-b1->body->orientation);
 
@@ -139,22 +103,17 @@ void CircleToOBB(Manifold &m, Shape *c1, Shape *b1) {
   m.postPosition.oldOrientationB = b1->body->orientation;
 }
 
-// Collision Detection Oriented Rectangle To Circle
 void OBBToCircle(Manifold &m, Shape *A, Shape *B) {
   m.A = B->body;
   m.B = A->body;
   CircleToOBB(m, B, A);
 }
 
-/*******************************************************************************************
-Collision Detection OBB To OBB It is the most Problematic method we will see in this file.cpp.
-This Method uses the SAT (Separation Axis Theorem), finding the Minimum and Maximum to obtain the
-Minimum Penetration Axis. Collision detection OBB to OBB also has a Complete set of Problems such
-as: Inconsistent Points, Flip-Flop , Similar Edges, Rotation Rounding Errors, Etc. OBBs (Oriented
-Bounding Boxes) have certain Optimizations due to their Simplicity. Although There are 8 normals
-that must be tested, each OBB has 2 parallel edges that reduce it to 4 normals that must be tested.
-We can also transform the collision detection Problem into an AABBToOBB Test.
-**********************************************************************************************/
+/*
+OBB to OBB uses SAT (Separating Axis Theorem) to find the axis of minimum penetration.
+Each OBB has 2 pairs of parallel edges, so 4 normals are tested instead of 8.
+Known problems: inconsistent points, flip-flop, similar edges, rotation rounding errors.
+*/
 inline static int8_t FindIncidentEdgeIndex(const real &projection1, const real &projection2) {
   int8_t i = projection1 < 0.0f ? 1 : -1;
 
@@ -173,7 +132,6 @@ inline static Vec2 ClipSegment(Vec2 &A, Vec2 &B, Vec2 &C, const Vec2 &n) {
   return (0 > t || t > 1) ? A : A + BA * t;
 }
 
-// Collision Detection Oriented Rectangle To Oriented Rectangle
 void OBBToOBB(Manifold &m, Shape *b1, Shape *b2) {
   Mat2 Rot1(b2->body->orientation - b1->body->orientation);
 

@@ -1,5 +1,5 @@
 ﻿/*************************************************************************
- * Copyright (c) 2019-2025 Jonathan Peña
+ * Copyright (c) 2019-2026 Jonathan Peña
  * Permission to use, copy, modify, distribute and sell this software
  * and its documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies.
@@ -20,10 +20,8 @@ Manifold::Manifold(RigidBody *a, RigidBody *b) : numContacts(0), A(a), B(b) {
   Dispatcher[A->shape->type][B->shape->type](*this, A->shape, B->shape);
 }
 
-/****************************************************************************************************************
-if the manifold exists in the list, we check if there is any contact point that can be Warm Starting
-This can be achieved with a distance heuristic, id, Etc. Reference Erin Catto
-*****************************************************************************************************************/
+// If the manifold already exists, contact points that match (id or distance heuristic) keep their
+// accumulated impulses for Warm Starting. Reference Erin Catto
 void Manifold::Update(Contact *newContacts, const int8_t &numNewContacts) {
 
   Contact mergedContacts[2];
@@ -64,15 +62,12 @@ void Manifold::WarmStarting() {
   }
 }
 
-/***********************************************************************************************************************
-This PreStep Method calculates the normal and tangent inverse effective mass of each Contact point
-and Baumgarte Stabilization.
+/*
+PreStep: inverse effective mass of each contact point and Baumgarte Stabilization.
 
-Equation: A = J * M⁻¹ * Jt
+A = J * M⁻¹ * Jt   (Jt = transposed Jacobian)
 
-* Jt = transposed Jacobian
-
-* Only in 2D the inverse effective mass is =
+In 2D, with X as the cross product, for 1 constraint between 2 rigid bodies:
 
                  J                                M⁻¹                       Jt
 [nx, ny, n X ra, -nx, -ny, -n X rb] |m1⁻¹  0      0     0     0       0| | nx    |
@@ -82,25 +77,14 @@ Equation: A = J * M⁻¹ * Jt
                                     |0     0      0     0     m2⁻¹    0| |-ny    |
                                     |0     0      0     0     0    I2⁻¹| |-n X rb|
 
-* The X in this case Represents the Cross Product.
+Normal:  A⁻¹  = m1⁻¹ + m2⁻¹ + (n X r1)^2 * I1⁻¹ + (n X r2)^2 * I2⁻¹
 
-* This is only 1 constraint with 2 rigid bodies involved.
+Tangent: At⁻¹ = m1⁻¹ + m2⁻¹ + (t X r1)^2 * I1⁻¹ + (t X r2)^2 * I2⁻¹
 
-* The final result will be a scalar that is equal to: A⁻¹ = m1⁻¹ + m2⁻¹ + (n X r1)^2 * I1⁻¹ + (n X
-r2)^2 * I2⁻¹
+Baumgarte transforms the Position Error into a Velocity Error:
 
-* The same goes for the "A" but with the tangent vector.
-
-* Equation: At⁻¹ = m1⁻¹ + m2⁻¹ + (t X r1)^2 * I1⁻¹ + (t X r2)^2 * I2⁻¹
-
-* Then we have the Baumgarte Stabilization that transforms the "Position Error" into a "Velocity
-Error".
-
-* Velocity Bias = Baumgarte = x / Δt * ϵ
-
-* After calculating the value of Baumgarte Stabilization, We use the same Solver that resolves the
-Velocity Constraint to resolves penetration.
-*******************************************************************************************************************************************/
+Velocity Bias = x / Δt * ϵ
+*/
 void Manifold::PreStep(const real &dt) {
   const real k_slop = 0.004f;
   const real k_biasFactor = 0.1f;

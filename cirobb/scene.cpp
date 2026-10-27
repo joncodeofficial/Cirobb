@@ -1,5 +1,5 @@
 ﻿/*************************************************************************
- * Copyright (c) 2019-2021 Jonathan Peña
+ * Copyright (c) 2019-2026 Jonathan Peña
  * Permission to use, copy, modify, distribute and sell this software
  * and its documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies.
@@ -15,10 +15,8 @@ typedef std::map<ManifoldKey, Manifold>::iterator ManifoldAux;
 
 int Scene::CorrectionType = NONE;
 
-// Add a Shape to the vector
 void Scene::Add(RigidBody *body) { bodies.push_back(body); }
 
-// Clear the vector and map
 void Scene::Clear() {
   bodies.clear();
   manifolds.clear();
