@@ -1,7 +1,7 @@
 #ifndef RENDER_H
 #define RENDER_H
 
-#include "../cirobb/Shape.h"
+#include "../cirobb/shape.h"
 #include "GLFW/glfw3.h"
 
 void DrawShape(const Shape* shape);

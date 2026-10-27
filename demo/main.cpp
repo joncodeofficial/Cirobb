@@ -16,8 +16,8 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl2.h"
 #endif
-#include "../cirobb/Scene.h"
-#include "Render.h"
+#include "../cirobb/scene.h"
+#include "render.h"
 
 namespace {
 GLFWwindow *mainWindow = nullptr;

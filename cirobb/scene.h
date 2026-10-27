@@ -14,7 +14,7 @@
 
 #include <map>
 #include <vector>
-#include "Manifold.h"
+#include "manifold.h"
 
 enum {NONE = 0, BAUMGARTE, NGS};
 

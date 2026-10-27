@@ -8,8 +8,8 @@
  * It is provided "as is" without express or implied warranty.
  **************************************************************************/
 
-#include "Collision.h"
-#include "Scene.h"
+#include "collision.h"
+#include "scene.h"
 
 Manifold::Manifold(RigidBody *a, RigidBody *b) : numContacts(0), A(a), B(b) {
 

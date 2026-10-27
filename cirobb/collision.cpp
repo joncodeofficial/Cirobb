@@ -8,7 +8,7 @@
  * It is provided "as is" without express or implied warranty.
  **************************************************************************/
 
-#include "Collision.h"
+#include "collision.h"
 
 /************************************************************************************************
 Collision detection is one of the most important and problematic parts of physics engines.

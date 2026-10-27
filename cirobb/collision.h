@@ -12,8 +12,8 @@
 #ifndef COLLISION_H
 #define COLLISION_H
 
-#include "Shape.h"
-#include "Manifold.h"
+#include "shape.h"
+#include "manifold.h"
 
 typedef void(*CollisionCallBack)(Manifold&, Shape*, Shape*);
 

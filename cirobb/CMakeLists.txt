@@ -1,23 +1,23 @@
 # Variable INCLUDE_FILES
 set(CIROBB_INCLUDE_FILES
 
-  CbMath.h
-  Collision.h 
-  RigidBody.h 
-  Manifold.h
-  Scene.h
-  Shape.h
+  cbMath.h
+  collision.h 
+  rigidBody.h 
+  manifold.h
+  scene.h
+  shape.h
 )
 
 
 # Variable SOURCE_FILES
 set(CIROBB_SOURCE_FILES
 
-  Collision.cpp 
-  RigidBody.cpp
-  Manifold.cpp
-  Scene.cpp
-  Shape.cpp
+  collision.cpp 
+  rigidBody.cpp
+  manifold.cpp
+  scene.cpp
+  shape.cpp
 )
 
 

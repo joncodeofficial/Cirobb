@@ -8,7 +8,7 @@
  * It is provided "as is" without express or implied warranty.
  **************************************************************************/
 
-#include "Shape.h"
+#include "shape.h"
 
 RigidBody::RigidBody(Shape &shape, const Vec2 &_position, const real &_orientation) {
   position = _position;

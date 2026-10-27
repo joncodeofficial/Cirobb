@@ -8,7 +8,7 @@
  * It is provided "as is" without express or implied warranty.
  **************************************************************************/
 
-#include "Scene.h"
+#include "scene.h"
 
 typedef std::pair<ManifoldKey, Manifold> ManPair;
 typedef std::map<ManifoldKey, Manifold>::iterator ManifoldAux;

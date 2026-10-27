@@ -11,7 +11,7 @@
 #ifndef RIGIDBODY_H
 #define RIGIDBODY_H
 
-#include "CbMath.h"
+#include "cbMath.h"
 
 struct Shape;
 

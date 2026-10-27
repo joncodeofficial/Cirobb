@@ -1,15 +1,15 @@
 # Variable INCLUDE_FILES
 set(DEMO_INCLUDE_FILES
 
-  Render.h
+  render.h
 )
 
 
 # Variable SOURCE_FILES
 set(DEMO_SOURCE_FILES
 
-  Render.cpp
-  Main.cpp
+  render.cpp
+  main.cpp
 )
 
 

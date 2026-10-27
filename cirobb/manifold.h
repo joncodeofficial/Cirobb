@@ -11,7 +11,7 @@
 #ifndef MANIFOLD_H
 #define MANIFOLD_H
 
-#include "RigidBody.h"
+#include "rigidBody.h"
 #include <cstdint>
 
 struct FeatureID {

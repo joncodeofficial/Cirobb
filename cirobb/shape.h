@@ -11,7 +11,7 @@
 #ifndef SHAPE_H
 #define SHAPE_H
 
-#include "RigidBody.h"
+#include "rigidBody.h"
 #include <stdio.h>
 
 enum typeShape { circle, obb };
