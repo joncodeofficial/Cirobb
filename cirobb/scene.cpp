@@ -22,7 +22,7 @@ void Scene::Clear() {
   manifolds.clear();
 }
 
-// Contact Persistence Algorithm Reference Erin catto.
+// Contact Persistence Algorithm
 void Scene::BroadPhase() {
   const int length = static_cast<int>(bodies.size());
 

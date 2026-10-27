@@ -11,7 +11,6 @@
 #include "collision.h"
 
 // Narrow phase only, discrete collision detection (DCD). The broad phase is brute force O(n^2).
-// Thank you very much Dirk Gregorius.
 
 /*
 Circle to Circle: there is a collision if |c2 - c1| <= r1 + r2

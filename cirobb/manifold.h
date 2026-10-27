@@ -90,7 +90,7 @@ struct Manifold {
   real RecalculatePenetration(Vec2 &, Vec2 &, const int &) const;
 };
 
-// This is used by std::set. Erin catto
+// This is used by std::set.
 inline bool operator<(const ManifoldKey &a1, const ManifoldKey &a2) {
   return (a1.A < a2.A || a1.A == a2.A && a1.B < a2.B);
 }
