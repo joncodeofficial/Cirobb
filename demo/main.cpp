@@ -250,6 +250,7 @@ int main(int args, char **argv) {
   // Installed after our callbacks so ImGui chains them
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
+  ImGui::GetIO().IniFilename = nullptr; // Do not write imgui.ini in the working directory
   ImGui_ImplGlfw_InitForOpenGL(mainWindow, true);
   ImGui_ImplOpenGL2_Init();
 #endif
