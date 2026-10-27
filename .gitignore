@@ -5,3 +5,4 @@ lib/
 build-web/
 .vscode/
 .cache/
+.clang-tidy
